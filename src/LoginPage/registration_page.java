@@ -56,7 +56,7 @@ public class registration_page extends javax.swing.JFrame {
         }
     }
     public boolean isValidEmail(String email) {
-        return email.matches("^[a-zA-Z0-9._%+-]+@gmail\\.com$");
+        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
     }
     public boolean isValidContact(String contact) {
         return contact.matches("^9\\d{9}$");

@@ -33,7 +33,7 @@ public class user_form extends javax.swing.JFrame {
     public void displayData(){
         try{
             config conf = new config();
-            ResultSet rs = conf.getData("SELECT * FROM accounts");
+            ResultSet rs = conf.getData("SELECT a_id, fname, lname, user_type, contact, status FROM accounts");
             users_table.setModel(DbUtils.resultSetToTableModel(rs));
              rs.close();
         }catch(SQLException ex){
