@@ -5,8 +5,10 @@
  */
 package User;
 
+import Admin.citizen_form;
 import Config.Session;
 import LoginPage.login_page;
+import blotter.blotter_dashboard;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -47,6 +49,14 @@ public class user_dashboard extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         user1 = new javax.swing.JLabel();
         user2 = new javax.swing.JLabel();
+        label_user1 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        user3 = new javax.swing.JLabel();
+        user4 = new javax.swing.JLabel();
+        label_user2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        user5 = new javax.swing.JLabel();
+        user6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -186,6 +196,118 @@ public class user_dashboard extends javax.swing.JFrame {
 
         jPanel1.add(label_user, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 110, 150, 150));
 
+        label_user1.setBackground(new java.awt.Color(204, 255, 255));
+        label_user1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        label_user1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                label_user1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                label_user1MouseExited(evt);
+            }
+        });
+        label_user1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel5MouseExited(evt);
+            }
+        });
+        label_user1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 150));
+
+        user3.setBackground(new java.awt.Color(204, 255, 255));
+        user3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        user3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/many_users_icon (1).png"))); // NOI18N
+        user3.setOpaque(true);
+        user3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                user3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                user3MouseExited(evt);
+            }
+        });
+        label_user1.add(user3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 130, 100));
+
+        user4.setBackground(new java.awt.Color(204, 255, 255));
+        user4.setFont(new java.awt.Font("Playbill", 0, 30)); // NOI18N
+        user4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        user4.setText("Citizens");
+        user4.setOpaque(true);
+        user4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                user4MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                user4MouseExited(evt);
+            }
+        });
+        label_user1.add(user4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 130, 30));
+
+        jPanel1.add(label_user1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 110, 150, 150));
+
+        label_user2.setBackground(new java.awt.Color(204, 255, 255));
+        label_user2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        label_user2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                label_user2MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                label_user2MouseExited(evt);
+            }
+        });
+        label_user2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel6MouseExited(evt);
+            }
+        });
+        label_user2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 150));
+
+        user5.setBackground(new java.awt.Color(204, 255, 255));
+        user5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        user5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/many_users_icon (1).png"))); // NOI18N
+        user5.setOpaque(true);
+        user5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                user5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                user5MouseExited(evt);
+            }
+        });
+        label_user2.add(user5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 130, 100));
+
+        user6.setBackground(new java.awt.Color(204, 255, 255));
+        user6.setFont(new java.awt.Font("Playbill", 0, 30)); // NOI18N
+        user6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        user6.setText("Blotter");
+        user6.setOpaque(true);
+        user6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                user6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                user6MouseExited(evt);
+            }
+        });
+        label_user2.add(user6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 130, 30));
+
+        jPanel1.add(label_user2, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 300, 150, 150));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -313,6 +435,113 @@ public class user_dashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_label_userMouseExited
 
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        // TODO add your handling code here:
+        citizen_form cf = new citizen_form();
+        cf.Add.setEnabled(false);
+        cf.Edit.setEnabled(false);
+        cf.Delete.setEnabled(false);
+        cf.Uidentifier.setText("Staff");
+        cf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel5MouseClicked
+
+    private void jLabel5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseEntered
+        // TODO add your handling code here:
+        user3.setForeground(Color.white);
+        user3.setBackground(Color.gray);
+        user4.setForeground(Color.white);
+        user4.setBackground(Color.gray);
+        label_user1.setForeground(Color.white);
+        label_user1.setBackground(Color.gray);
+    }//GEN-LAST:event_jLabel5MouseEntered
+
+    private void jLabel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseExited
+        // TODO add your handling code here:
+        user3.setForeground(Color.black);
+        user3.setBackground(null);
+        user4.setForeground(Color.black);
+        user4.setBackground(null);
+        label_user1.setForeground(Color.black);
+        label_user1.setBackground(null);
+    }//GEN-LAST:event_jLabel5MouseExited
+
+    private void user3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user3MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_user3MouseEntered
+
+    private void user3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user3MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_user3MouseExited
+
+    private void user4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user4MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_user4MouseEntered
+
+    private void user4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user4MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_user4MouseExited
+
+    private void label_user1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_user1MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_user1MouseEntered
+
+    private void label_user1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_user1MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_user1MouseExited
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        // TODO add your handling code here:
+        blotter_dashboard bd = new blotter_dashboard();
+        bd.Uidentifier.setText("Staff");
+        bd.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void jLabel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseEntered
+        // TODO add your handling code here:
+        user5.setForeground(Color.white);
+        user5.setBackground(Color.gray);
+        user6.setForeground(Color.white);
+        user6.setBackground(Color.gray);
+        label_user2.setForeground(Color.white);
+        label_user2.setBackground(Color.gray);
+    }//GEN-LAST:event_jLabel6MouseEntered
+
+    private void jLabel6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseExited
+        // TODO add your handling code here:
+        user5.setForeground(Color.black);
+        user5.setBackground(null);
+        user6.setForeground(Color.black);
+        user6.setBackground(null);
+        label_user2.setForeground(Color.black);
+        label_user2.setBackground(null);
+    }//GEN-LAST:event_jLabel6MouseExited
+
+    private void user5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user5MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_user5MouseEntered
+
+    private void user5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user5MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_user5MouseExited
+
+    private void user6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user6MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_user6MouseEntered
+
+    private void user6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user6MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_user6MouseExited
+
+    private void label_user2MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_user2MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_user2MouseEntered
+
+    private void label_user2MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_label_user2MouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_label_user2MouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -354,14 +583,22 @@ public class user_dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel label_user;
+    private javax.swing.JPanel label_user1;
+    private javax.swing.JPanel label_user2;
     private javax.swing.JLabel logout;
     private javax.swing.JLabel user1;
     private javax.swing.JLabel user2;
+    private javax.swing.JLabel user3;
+    private javax.swing.JLabel user4;
+    private javax.swing.JLabel user5;
+    private javax.swing.JLabel user6;
     // End of variables declaration//GEN-END:variables
 }

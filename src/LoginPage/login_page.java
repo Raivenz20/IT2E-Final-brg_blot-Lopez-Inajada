@@ -6,6 +6,7 @@
 package LoginPage;
 
 import Admin.admin_dashboard;
+import CRUD_Form.forgot_pass;
 import Config.Session;
 import Config.config;
 import Config.passwordHasher;
@@ -16,6 +17,7 @@ import java.awt.Font;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -90,6 +92,7 @@ public class login_page extends javax.swing.JFrame {
         login = new javax.swing.JLabel();
         clear = new javax.swing.JLabel();
         register = new javax.swing.JLabel();
+        forgot = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -214,7 +217,7 @@ public class login_page extends javax.swing.JFrame {
                 clearMousePressed(evt);
             }
         });
-        jPanel2.add(clear, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, 110, 40));
+        jPanel2.add(clear, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 110, 40));
 
         register.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         register.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -230,7 +233,23 @@ public class login_page extends javax.swing.JFrame {
                 registerMouseExited(evt);
             }
         });
-        jPanel2.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 350, 30));
+        jPanel2.add(register, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, 350, 20));
+
+        forgot.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        forgot.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        forgot.setText("Forgot Password?");
+        forgot.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                forgotMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                forgotMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                forgotMouseExited(evt);
+            }
+        });
+        jPanel2.add(forgot, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 350, 20));
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 114, 810, 380));
 
@@ -405,6 +424,12 @@ public class login_page extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "In-Active Account, Contact the Admin!");
             }else{
                 JOptionPane.showMessageDialog(null, "Login Successfully!");
+                
+                config conf = new config();
+                Session sess = Session.getInstance();
+                String action = "User Login";
+                conf.insertData("INSERT INTO logs (u_id, action, date) VALUES ('"+sess.getUid()+"', '"+action+"', '"+LocalDateTime.now()+"')");
+                
                 if(type.equals("Admin")){
                     admin_dashboard admin = new admin_dashboard();
                     admin.setVisible(true);
@@ -419,6 +444,23 @@ public class login_page extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Login Unsuccessfull!");
         }
     }//GEN-LAST:event_loginMouseClicked
+
+    private void forgotMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_forgotMouseClicked
+        // TODO add your handling code here:
+        forgot_pass fp = new forgot_pass();
+        fp.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_forgotMouseClicked
+
+    private void forgotMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_forgotMouseEntered
+        // TODO add your handling code here:
+        forgot.setFont(new Font("Tahoma", Font.BOLD, 20));
+    }//GEN-LAST:event_forgotMouseEntered
+
+    private void forgotMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_forgotMouseExited
+        // TODO add your handling code here:
+        forgot.setFont(null);
+    }//GEN-LAST:event_forgotMouseExited
 
     /**
      * @param args the command line arguments
@@ -458,6 +500,7 @@ public class login_page extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel back;
     private javax.swing.JLabel clear;
+    private javax.swing.JLabel forgot;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

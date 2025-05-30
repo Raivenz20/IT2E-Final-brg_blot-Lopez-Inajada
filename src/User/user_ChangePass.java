@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
@@ -268,39 +269,40 @@ public class user_ChangePass extends javax.swing.JFrame {
 
     private void saveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveMouseClicked
         // TODO add your handling code here:
-        try{
+        try {
             config conf = new config();
             Session sess = Session.getInstance();
-            String query = "SELECT * FROM accounts WHERE a_id = '"+sess.getUid()+"'";
+            String query = "SELECT * FROM accounts WHERE a_id = '" + sess.getUid() + "'";
             ResultSet rs = conf.getData(query);
-            if(rs.next()){
+            if (rs.next()) {
                 String oldpass = rs.getString("pname");
                 String oldhash = passwordHasher.hashPassword(old_pass.getText());
-                if(oldpass.equals(oldhash)){
-                    if(pass.getText().length()<8){
+                if (oldpass.equals(oldhash)) {
+                    if (pass.getText().length() < 8) {
                         JOptionPane.showMessageDialog(null, "Password must be 8 or longer!");
-                    }else{
+                    } else {
                         String npass = passwordHasher.hashPassword(pass.getText());
-                        if(oldpass.equals(npass)){
+                        if (oldpass.equals(npass)) {
                             JOptionPane.showMessageDialog(null, "Password is the same as the old one!");
-                        }else if(!pass.getText().equals(cpass.getText())){
+                        } else if (!pass.getText().equals(cpass.getText())) {
                             JOptionPane.showMessageDialog(null, "Password does not match!");
-                        }else{
-                            conf.updateData("UPDATE accounts SET pname = '"+npass+"'");
+                        } else {
+                            conf.updateData("UPDATE accounts SET pname = '" + npass + "' WHERE a_id = '" + sess.getUid() + "'");
+                            String action = "Changed own password";
+                            conf.insertData("INSERT INTO logs (u_id, action, date) VALUES ('" + sess.getUid() + "', '" + action + "', '" + LocalDateTime.now() + "')");
                             JOptionPane.showMessageDialog(null, "Successfully Updated!");
                             user_details ud = new user_details();
                             ud.setVisible(true);
                             this.dispose();
                         }
                     }
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Old password is incorrect!");
                 }
             }
-        }catch(SQLException | NoSuchAlgorithmException ex){
-            System.out.println(""+ex);
-        }
-        
+        } catch (SQLException | NoSuchAlgorithmException ex) {
+            System.out.println("" + ex);
+        }       
     }//GEN-LAST:event_saveMouseClicked
 
     private void saveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveMouseEntered

@@ -9,9 +9,11 @@ import CRUD_Form.crud_form;
 import Config.Session;
 import Config.config;
 import LoginPage.login_page;
+import Printing.PanelPrinting;
 import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
@@ -66,6 +68,7 @@ public class user_form extends javax.swing.JFrame {
         c_user = new javax.swing.JLabel();
         Add = new javax.swing.JLabel();
         Edit = new javax.swing.JLabel();
+        Delete = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         users_table = new javax.swing.JTable();
 
@@ -206,6 +209,24 @@ public class user_form extends javax.swing.JFrame {
         });
         jPanel3.add(Edit, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 240, 210, 30));
 
+        Delete.setBackground(new java.awt.Color(153, 255, 255));
+        Delete.setFont(new java.awt.Font("Playbill", 0, 36)); // NOI18N
+        Delete.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Delete.setText("Delete");
+        Delete.setOpaque(true);
+        Delete.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                DeleteMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                DeleteMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                DeleteMouseExited(evt);
+            }
+        });
+        jPanel3.add(Delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 280, 210, 30));
+
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 90, 220, 430));
 
         users_table.setModel(new javax.swing.table.DefaultTableModel(
@@ -280,6 +301,8 @@ public class user_form extends javax.swing.JFrame {
         cf.title.setText("Adding User Form");
         cf.enter.setText("Add");
         cf.setVisible(true);
+        cf.Select.setEnabled(true);
+        cf.Remove.setEnabled(false);
         this.dispose();
     }//GEN-LAST:event_AddMouseClicked
 
@@ -317,11 +340,26 @@ public class user_form extends javax.swing.JFrame {
                     cf.email.setText(""+rs.getString("email"));
                     cf.contact.setText(""+rs.getString("contact"));
                     cf.username.setText(""+rs.getString("uname"));
+                    cf.fanimal.setText(""+rs.getString("fanimal"));
+                    cf.fcolor.setText(""+rs.getString("fcolor"));
                     cf.password.setText("********");
                     cf.cpassword.setText("********");
                     cf.enter.setText("Update");
                     cf.title.setText("Updating User Form");
+                    cf.image.setIcon(cf.ResizeImage(rs.getString("image"), null, cf.image));
+                    cf.oldpath = rs.getString("image");
+                    cf.path = rs.getString("image");
+                    cf.destination = rs.getString("image");
                     cf.setVisible(true);
+                    
+                    if(rs.getString("image").isEmpty()){
+                        cf.Select.setEnabled(true);
+                        cf.Remove.setEnabled(false);
+                    }else{
+                        cf.Select.setEnabled(false);
+                        cf.Remove.setEnabled(true);
+                    }
+                    
                     this.dispose();
                 }
             }catch(SQLException ex){
@@ -361,6 +399,46 @@ public class user_form extends javax.swing.JFrame {
         back.setBackground(null);
     }//GEN-LAST:event_backMouseExited
 
+    private void DeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DeleteMouseClicked
+        // TODO add your handling code here:
+        int rowIndex = users_table.getSelectedRow();
+        if (rowIndex < 0) {
+            JOptionPane.showMessageDialog(null, "Please select an item!");
+        } else {
+            try {
+                config conf = new config();
+                TableModel tbl = users_table.getModel();
+                String a_id = tbl.getValueAt(rowIndex, 0).toString();
+                int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    String sql = "DELETE FROM accounts WHERE a_id = '" + a_id + "'";
+                    conf.deleteData(sql);
+                    Session sess = Session.getInstance();
+                    String action = "Deleted user with ID No. " + a_id;
+                    conf.insertData("INSERT INTO logs (u_id, action, date) VALUES ('" + sess.getUid() + "', '" + action + "', '" + LocalDateTime.now() + "')");
+                    displayData();
+                    JOptionPane.showMessageDialog(null, "User deleted successfully!");
+                }
+
+            } catch (Exception ex) {
+                System.out.println("Error: " + ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_DeleteMouseClicked
+
+    private void DeleteMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DeleteMouseEntered
+        // TODO add your handling code here:
+        Delete.setForeground(Color.white);
+        Delete.setBackground(Color.gray);
+    }//GEN-LAST:event_DeleteMouseEntered
+
+    private void DeleteMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DeleteMouseExited
+        // TODO add your handling code here:
+        Delete.setForeground(Color.black);
+        Delete.setBackground(null);
+    }//GEN-LAST:event_DeleteMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -398,6 +476,7 @@ public class user_form extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Add;
+    private javax.swing.JLabel Delete;
     private javax.swing.JLabel Edit;
     private javax.swing.JLabel acc_name;
     private javax.swing.JLabel back;

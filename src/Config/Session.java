@@ -21,8 +21,10 @@ public class Session {
     private String username;
     private String type;
     private String status;
+    private String fcolor;
+    private String fanimal;
     
-    private Session(){
+    public Session(){
         
     }
     
@@ -83,6 +85,22 @@ public class Session {
 
     public void setContact(String contact) {
         this.contact = contact;
+    }
+    
+    public String getFcolor() {
+        return fcolor;
+    }
+    
+    public void setFcolor(int uid) {
+        this.fcolor = fcolor;
+    }
+    
+    public String getFanimal() {
+        return fanimal;
+    }
+    
+    public void setFanimal(int uid) {
+        this.fanimal = fanimal;
     }
 
     public String getUsername() {

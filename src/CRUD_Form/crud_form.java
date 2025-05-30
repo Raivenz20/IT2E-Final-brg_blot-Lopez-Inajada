@@ -6,13 +6,29 @@
 package CRUD_Form;
 
 import Admin.user_form;
+import Config.Session;
 import Config.config;
 import Config.passwordHasher;
+import com.mysql.jdbc.Statement;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.NoSuchAlgorithmException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 /**
@@ -22,12 +38,91 @@ import javax.swing.JOptionPane;
 public class crud_form extends javax.swing.JFrame {
 
     /**
-     * Creates new form Edit_form
+     * Creates new form crud_form_citizen
      */
     public crud_form() {
         initComponents();
     }
 
+    public String destination = "";
+    File selectedFile;
+    public String oldpath;
+    public String path;
+    
+    public int FileExistenceChecker(String path){
+        File file = new File(path);
+        String fileName = file.getName();
+        
+        Path filePath = Paths.get("src/userimages", fileName);
+        boolean fileExists = Files.exists(filePath);
+        
+        if (fileExists) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    
+    public static int getHeightFromWidth(String imagePath, int desiredWidth) {
+        try {
+            // Read the image file
+            File imageFile = new File(imagePath);
+            BufferedImage image = ImageIO.read(imageFile);
+            
+            // Get the original width and height of the image
+            int originalWidth = image.getWidth();
+            int originalHeight = image.getHeight();
+            
+            // Calculate the new height based on the desired width and the aspect ratio
+            int newHeight = (int) ((double) desiredWidth / originalWidth * originalHeight);
+            
+            return newHeight;
+        } catch (IOException ex) {
+            System.out.println("No image found!");
+        }
+        
+        return -1;
+    }
+    
+    public  ImageIcon ResizeImage(String ImagePath, byte[] pic, JLabel label) {
+        ImageIcon MyImage = null;
+            if(ImagePath !=null){
+                MyImage = new ImageIcon(ImagePath);
+            }else{
+                MyImage = new ImageIcon(pic);
+            }
+
+        int newHeight = getHeightFromWidth(ImagePath, label.getWidth());
+
+        Image img = MyImage.getImage();
+        Image newImg = img.getScaledInstance(label.getWidth(), newHeight, Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(newImg);
+        return image;
+    }
+    
+    public void imageUpdater(String existingFilePath, String newFilePath){
+        File existingFile = new File(existingFilePath);
+        if (existingFile.exists()) {
+            String parentDirectory = existingFile.getParent();
+            File newFile = new File(newFilePath);
+            String newFileName = newFile.getName();
+            File updatedFile = new File(parentDirectory, newFileName);
+            existingFile.delete();
+            try {
+                Files.copy(newFile.toPath(), updatedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Image updated successfully.");
+            } catch (IOException e) {
+                System.out.println("Error occurred while updating the image: "+e);
+            }
+        } else {
+            try{
+                Files.copy(selectedFile.toPath(), new File(destination).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }catch(IOException e){
+                System.out.println("Error on update!");
+            }
+        }
+    }
+    
     public static String em, us;
 
     public boolean duplicateChecker() {
@@ -93,7 +188,6 @@ public class crud_form extends javax.swing.JFrame {
     public boolean isValidContact(String contact) {
         return contact.matches("^9\\d{9}$");
     }
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -122,6 +216,12 @@ public class crud_form extends javax.swing.JFrame {
         status = new javax.swing.JComboBox<>();
         uid = new javax.swing.JTextField();
         back = new javax.swing.JLabel();
+        fcolor = new javax.swing.JTextField();
+        fanimal = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        image = new javax.swing.JLabel();
+        Remove = new javax.swing.JLabel();
+        Select = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -133,7 +233,7 @@ public class crud_form extends javax.swing.JFrame {
         title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         title.setText("User Form");
         title.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.add(title, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 340, 40));
+        jPanel1.add(title, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 40, 760, 40));
 
         username.setBackground(new java.awt.Color(204, 255, 255));
         username.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -152,7 +252,7 @@ public class crud_form extends javax.swing.JFrame {
                 usernameActionPerformed(evt);
             }
         });
-        jPanel1.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, 360, 40));
+        jPanel1.add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 170, 310, 40));
 
         fname.setBackground(new java.awt.Color(204, 255, 255));
         fname.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -171,7 +271,7 @@ public class crud_form extends javax.swing.JFrame {
                 fnameActionPerformed(evt);
             }
         });
-        jPanel1.add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 360, 40));
+        jPanel1.add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 210, 40));
 
         lname.setBackground(new java.awt.Color(204, 255, 255));
         lname.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -190,7 +290,7 @@ public class crud_form extends javax.swing.JFrame {
                 lnameActionPerformed(evt);
             }
         });
-        jPanel1.add(lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 360, 40));
+        jPanel1.add(lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 130, 210, 40));
 
         email.setBackground(new java.awt.Color(204, 255, 255));
         email.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -209,7 +309,7 @@ public class crud_form extends javax.swing.JFrame {
                 emailActionPerformed(evt);
             }
         });
-        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 360, 40));
+        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 170, 300, 40));
 
         gender.setBackground(new java.awt.Color(204, 255, 255));
         gender.setEditable(true);
@@ -222,7 +322,7 @@ public class crud_form extends javax.swing.JFrame {
                 genderActionPerformed(evt);
             }
         });
-        jPanel1.add(gender, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 120, 70));
+        jPanel1.add(gender, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 190, 80));
 
         usertype.setBackground(new java.awt.Color(204, 255, 255));
         usertype.setEditable(true);
@@ -235,12 +335,12 @@ public class crud_form extends javax.swing.JFrame {
                 usertypeActionPerformed(evt);
             }
         });
-        jPanel1.add(usertype, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 220, 100, 70));
+        jPanel1.add(usertype, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 260, 200, 80));
 
         contact.setBackground(new java.awt.Color(204, 255, 255));
         contact.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         contact.setToolTipText("");
-        contact.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Contact Number", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 0, 14))); // NOI18N
+        contact.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Contact Number +63", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 0, 14))); // NOI18N
         contact.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 contactMouseEntered(evt);
@@ -254,17 +354,17 @@ public class crud_form extends javax.swing.JFrame {
                 contactActionPerformed(evt);
             }
         });
-        jPanel1.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, 360, 40));
+        jPanel1.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 130, 190, 40));
 
         cpassword.setBackground(new java.awt.Color(204, 255, 255));
         cpassword.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         cpassword.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Confirm Password", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 0, 14))); // NOI18N
-        jPanel1.add(cpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 450, 360, 40));
+        jPanel1.add(cpassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 350, 210, 40));
 
         password.setBackground(new java.awt.Color(204, 255, 255));
         password.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         password.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Password", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 0, 14))); // NOI18N
-        jPanel1.add(password, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 410, 360, 40));
+        jPanel1.add(password, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, 190, 40));
 
         enter.setBackground(new java.awt.Color(204, 255, 255));
         enter.setFont(new java.awt.Font("Playbill", 0, 36)); // NOI18N
@@ -283,7 +383,7 @@ public class crud_form extends javax.swing.JFrame {
                 enterMouseExited(evt);
             }
         });
-        jPanel1.add(enter, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 500, 110, 40));
+        jPanel1.add(enter, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 350, 90, 40));
 
         clear.setBackground(new java.awt.Color(204, 255, 255));
         clear.setFont(new java.awt.Font("Playbill", 0, 36)); // NOI18N
@@ -310,7 +410,7 @@ public class crud_form extends javax.swing.JFrame {
                 clearMousePressed(evt);
             }
         });
-        jPanel1.add(clear, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 500, 110, 40));
+        jPanel1.add(clear, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 350, 90, 40));
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -323,7 +423,7 @@ public class crud_form extends javax.swing.JFrame {
                 jLabel4MouseClicked(evt);
             }
         });
-        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 0, 30, 30));
+        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 0, 30, 30));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -333,9 +433,9 @@ public class crud_form extends javax.swing.JFrame {
                 jLabel3MouseClicked(evt);
             }
         });
-        jPanel4.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 0, 30, 30));
+        jPanel4.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 0, 30, 30));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 380, 30));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 840, 30));
 
         status.setBackground(new java.awt.Color(204, 255, 255));
         status.setEditable(true);
@@ -348,7 +448,7 @@ public class crud_form extends javax.swing.JFrame {
                 statusActionPerformed(evt);
             }
         });
-        jPanel1.add(status, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 220, 100, 70));
+        jPanel1.add(status, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 260, 200, 80));
 
         uid.setBackground(new java.awt.Color(204, 255, 255));
         uid.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -367,7 +467,7 @@ public class crud_form extends javax.swing.JFrame {
                 uidActionPerformed(evt);
             }
         });
-        jPanel1.add(uid, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 360, 40));
+        jPanel1.add(uid, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 610, 40));
 
         back.setBackground(new java.awt.Color(204, 255, 255));
         back.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
@@ -386,17 +486,103 @@ public class crud_form extends javax.swing.JFrame {
                 backMouseExited(evt);
             }
         });
-        jPanel1.add(back, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 520, 50, 20));
+        jPanel1.add(back, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 50, 40));
+
+        fcolor.setBackground(new java.awt.Color(204, 255, 255));
+        fcolor.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        fcolor.setToolTipText("");
+        fcolor.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Favorite Color", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 0, 14))); // NOI18N
+        fcolor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fcolorMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fcolorMouseExited(evt);
+            }
+        });
+        fcolor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fcolorActionPerformed(evt);
+            }
+        });
+        jPanel1.add(fcolor, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 210, 310, 40));
+
+        fanimal.setBackground(new java.awt.Color(204, 255, 255));
+        fanimal.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        fanimal.setToolTipText("");
+        fanimal.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Favorite Animal", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 0, 14))); // NOI18N
+        fanimal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fanimalMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fanimalMouseExited(evt);
+            }
+        });
+        fanimal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fanimalActionPerformed(evt);
+            }
+        });
+        jPanel1.add(fanimal, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 300, 40));
+
+        jPanel2.setBackground(new java.awt.Color(0, 204, 204));
+        jPanel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        image.setFont(new java.awt.Font("Tahoma", 0, 100)); // NOI18N
+        image.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jPanel2.add(image, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 170, 220));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 150, 190, 240));
+
+        Remove.setBackground(new java.awt.Color(204, 255, 255));
+        Remove.setFont(new java.awt.Font("Playbill", 0, 36)); // NOI18N
+        Remove.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Remove.setText("Remove");
+        Remove.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        Remove.setOpaque(true);
+        Remove.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                RemoveMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                RemoveMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                RemoveMouseExited(evt);
+            }
+        });
+        jPanel1.add(Remove, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 100, 90, 40));
+
+        Select.setBackground(new java.awt.Color(204, 255, 255));
+        Select.setFont(new java.awt.Font("Playbill", 0, 36)); // NOI18N
+        Select.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Select.setText("Select");
+        Select.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        Select.setOpaque(true);
+        Select.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                SelectMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                SelectMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                SelectMouseExited(evt);
+            }
+        });
+        jPanel1.add(Select, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 100, 90, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 379, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -473,82 +659,119 @@ public class crud_form extends javax.swing.JFrame {
 
     private void enterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_enterMouseClicked
         // TODO add your handling code here:
-        if(enter.getText().equals("Add")){
-            if(fname.getText().isEmpty()
-                || lname.getText().isEmpty()
-                || email.getText().isEmpty()
-                || username.getText().isEmpty()
-                || password.getText().isEmpty()
-                || contact.getText().isEmpty()) {
+        if (enter.getText().equals("Add")) {
+            config conf = new config();
+
+            if (fname.getText().isEmpty() || lname.getText().isEmpty() || email.getText().isEmpty()
+                || username.getText().isEmpty() || password.getText().isEmpty()
+                || fanimal.getText().isEmpty() || fcolor.getText().isEmpty() || contact.getText().isEmpty()) {
+
                 JOptionPane.showMessageDialog(null, "All Fields are Required!");
+
             } else if (!isValidEmail(email.getText())) {
                 JOptionPane.showMessageDialog(null, "Invalid Email! Must be @gmail.com");
+
             } else if (!isValidContact(contact.getText())) {
                 JOptionPane.showMessageDialog(null, "Invalid Contact Number! Must be 10 digits and start with 9");
+
             } else if (password.getText().length() < 8) {
                 JOptionPane.showMessageDialog(null, "Password Must be longer than 8!");
+
             } else if (!(password.getText().equals(cpassword.getText()))) {
                 JOptionPane.showMessageDialog(null, "Password does not match!");
+
             } else if (duplicateChecker()) {
                 System.out.println("Duplicate Exists!");
+
             } else {
-                config conf = new config();
-                try{
+                try {
                     String pass = passwordHasher.hashPassword(password.getText());
-                    if(conf.insertData("INSERT INTO accounts (fname, lname, gender, user_type, email, uname, pname, contact, status) "
-                        + "VALUES ('"+fname.getText()+"', '"+lname.getText()+"', '"+gender.getSelectedItem()+"'"
-                        + ", '"+usertype.getSelectedItem()+"', '"+email.getText()+"', '"+username.getText()+"'"
-                        + ", '"+pass+"', '"+contact.getText()+"', '"+status.getSelectedItem()+"')")==1) {
-                        JOptionPane.showMessageDialog(null, "Registered Successfully!");
-                        user_form uf = new user_form();
-                        uf.setVisible(true);
-                        this.dispose();
+
+                    String sql = "INSERT INTO accounts (fname, lname, gender, user_type, email, uname, pname, contact, fanimal, fcolor, status, image) "
+                               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    PreparedStatement pst = conf.connect.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    pst.setString(1, fname.getText());
+                    pst.setString(2, lname.getText());
+                    pst.setString(3, gender.getSelectedItem().toString());
+                    pst.setString(4, usertype.getSelectedItem().toString());
+                    pst.setString(5, email.getText());
+                    pst.setString(6, username.getText());
+                    pst.setString(7, pass);
+                    pst.setString(8, contact.getText());
+                    pst.setString(9, fanimal.getText());
+                    pst.setString(10, fcolor.getText());
+                    pst.setString(11, status.getSelectedItem().toString());
+                    pst.setString(12, destination);
+
+                    pst.execute();
+
+                    ResultSet generatedKey = pst.getGeneratedKeys();
+                    int lastInsertedId = -1;
+                    if (generatedKey.next()) {
+                        lastInsertedId = generatedKey.getInt(1);
                     }
-                }catch(NoSuchAlgorithmException ex){
-                    System.out.println(""+ex);
+
+                    Session sess = Session.getInstance();
+                    String action = "Added new user with ID No. " + lastInsertedId;
+                    conf.insertData("INSERT INTO logs (u_id, action, date) VALUES ('" + sess.getUid() + "', '" + action + "', '" + LocalDateTime.now() + "')");
+
+                    if (selectedFile != null && !destination.isEmpty()) {
+                        Files.copy(selectedFile.toPath(), new File(destination).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    }
+
+                    JOptionPane.showMessageDialog(null, "Registered Successfully!");
+                    user_form uf = new user_form();
+                    uf.setVisible(true);
+                    this.dispose();
+
+                } catch (NoSuchAlgorithmException | SQLException | IOException ex) {
+                    System.out.println("Error: " + ex);
                 }
             }
-        }else{
+
+        } else {
             config conf = new config();
-            if(fname.getText().isEmpty()
-                || lname.getText().isEmpty()
-                || email.getText().isEmpty()
-                || username.getText().isEmpty()
-                || password.getText().isEmpty()
-                || contact.getText().isEmpty()) {
+
+            if (fname.getText().isEmpty() || lname.getText().isEmpty() || email.getText().isEmpty()
+                || username.getText().isEmpty() || password.getText().isEmpty()
+                || fanimal.getText().isEmpty() || fcolor.getText().isEmpty() || contact.getText().isEmpty()) {
+
                 JOptionPane.showMessageDialog(null, "All Fields are Required!");
+
             } else if (!isValidEmail(email.getText())) {
                 JOptionPane.showMessageDialog(null, "Invalid Email! Must be @gmail.com");
+
             } else if (!isValidContact(contact.getText())) {
                 JOptionPane.showMessageDialog(null, "Invalid Contact Number! Must be 10 digits and start with 9");
+
             } else if (password.getText().length() < 8) {
                 JOptionPane.showMessageDialog(null, "Password Must be longer than 8!");
+
             } else if (!(password.getText().equals(cpassword.getText()))) {
                 JOptionPane.showMessageDialog(null, "Password does not match!");
+
             } else if (updateChecker()) {
                 System.out.println("Duplicate Exists!");
+
             } else {
-                if(password.getText().equals("********")){
-                    try{
-                        String pass = passwordHasher.hashPassword(password.getText());
-                        conf.updateData("UPDATE accounts SET fname = '"+fname.getText()+"',"
+                try {
+                    String pass = password.getText().equals("********") ? null : passwordHasher.hashPassword(password.getText());
+                    String updateQuery;
+                    
+                    if (pass == null) {
+                        updateQuery = "UPDATE accounts SET fname = '"+fname.getText()+"',"
                             + "lname = '"+lname.getText()+"',"
                             + "gender = '"+gender.getSelectedItem()+"',"
                             + "user_type = '"+usertype.getSelectedItem()+"',"
                             + "status = '"+status.getSelectedItem()+"',"
                             + "email = '"+email.getText()+"',"
                             + "contact = '"+contact.getText()+"',"
-                            + "uname = '"+username.getText()+"' WHERE a_id = '"+uid.getText()+"'");
-                        user_form uf = new user_form();
-                        uf.setVisible(true);
-                        this.dispose();
-                    }catch(NoSuchAlgorithmException ex){
-                        System.out.println(""+ex);
-                    }
-                }else{
-                    try{
-                        String pass = passwordHasher.hashPassword(password.getText());
-                        conf.updateData("UPDATE accounts SET fname = '"+fname.getText()+"',"
+                            + "fanimal = '"+fanimal.getText()+"',"
+                            + "fcolor = '"+fcolor.getText()+"',"
+                            + "uname = '"+username.getText()+"',"
+                            + "image = '"+destination+"' WHERE a_id = '"+uid.getText()+"'";
+                    } else {
+                        updateQuery = "UPDATE accounts SET fname = '"+fname.getText()+"',"
                             + "lname = '"+lname.getText()+"',"
                             + "gender = '"+gender.getSelectedItem()+"',"
                             + "user_type = '"+usertype.getSelectedItem()+"',"
@@ -556,13 +779,33 @@ public class crud_form extends javax.swing.JFrame {
                             + "email = '"+email.getText()+"',"
                             + "contact = '"+contact.getText()+"',"
                             + "uname = '"+username.getText()+"',"
-                            + "pname = '"+pass+"' WHERE a_id = '"+uid.getText()+"'");
-                        user_form uf = new user_form();
-                        uf.setVisible(true);
-                        this.dispose();
-                    }catch(NoSuchAlgorithmException ex){
-                        System.out.println(""+ex);
+                            + "fanimal = '"+fanimal.getText()+"',"
+                            + "fcolor = '"+fcolor.getText()+"',"
+                            + "pname = '"+pass+"',"
+                            + "image = '"+destination+"' WHERE a_id = '"+uid.getText()+"'";
                     }
+
+                    conf.updateData(updateQuery);
+                    if (destination.isEmpty()) {
+                        File existingFile = new File(oldpath);
+                        if (existingFile.exists()) {
+                            existingFile.delete();
+                        }
+                    } else {
+                        if (!(oldpath.equals(path))) {
+                            imageUpdater(oldpath, path);
+                        }
+                    }
+                    Session sess = Session.getInstance();
+                    String action = "Updated user with ID No. " + uid.getText();
+                    conf.insertData("INSERT INTO logs (u_id, action, date) VALUES ('" + sess.getUid() + "', '" + action + "', '" + LocalDateTime.now() + "')");
+
+                    user_form uf = new user_form();
+                    uf.setVisible(true);
+                    this.dispose();
+
+                } catch (NoSuchAlgorithmException ex) {
+                    System.out.println("Update Error: " + ex);
                 }
             }
         }
@@ -595,6 +838,8 @@ public class crud_form extends javax.swing.JFrame {
             username.setText(null);
             password.setText(null);
             cpassword.setText(null);
+            fanimal.setText(null);
+            fcolor.setText(null);
             JOptionPane.showMessageDialog(null, "Cleared Successfully!");
         }
     }//GEN-LAST:event_clearMouseClicked
@@ -615,6 +860,11 @@ public class crud_form extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_clearMousePressed
 
+    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        // TODO add your handling code here:
+        setExtendedState(JFrame.ICONIFIED);
+    }//GEN-LAST:event_jLabel4MouseClicked
+
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         // TODO add your handling code here:
         int exit = JOptionPane.showConfirmDialog(null, "Confirm Exit?", "Exit Confirmation", JOptionPane.YES_NO_OPTION);
@@ -625,11 +875,6 @@ public class crud_form extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Exit Canceled!");
         }
     }//GEN-LAST:event_jLabel3MouseClicked
-
-    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
-        // TODO add your handling code here:
-        setExtendedState(JFrame.ICONIFIED);
-    }//GEN-LAST:event_jLabel4MouseClicked
 
     private void statusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusActionPerformed
         // TODO add your handling code here:
@@ -665,6 +910,96 @@ public class crud_form extends javax.swing.JFrame {
         back.setForeground(Color.black);
         back.setBackground(null);
     }//GEN-LAST:event_backMouseExited
+
+    private void fcolorMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fcolorMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fcolorMouseEntered
+
+    private void fcolorMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fcolorMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fcolorMouseExited
+
+    private void fcolorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fcolorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fcolorActionPerformed
+
+    private void fanimalMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fanimalMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fanimalMouseEntered
+
+    private void fanimalMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fanimalMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fanimalMouseExited
+
+    private void fanimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fanimalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fanimalActionPerformed
+
+    private void RemoveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RemoveMouseClicked
+        // TODO add your handling code here:
+        if(!Remove.isEnabled()){
+            return;
+        }else{
+            Remove.setEnabled(true);
+            Select.setEnabled(true);
+            image.setIcon(null);
+            destination = "";
+            path = "";
+        }
+    }//GEN-LAST:event_RemoveMouseClicked
+
+    private void RemoveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RemoveMouseEntered
+        // TODO add your handling code here:
+        Remove.setForeground(Color.white);
+        Remove.setBackground(Color.gray);
+    }//GEN-LAST:event_RemoveMouseEntered
+
+    private void RemoveMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RemoveMouseExited
+        // TODO add your handling code here:
+        Remove.setForeground(Color.black);
+        Remove.setBackground(null);
+    }//GEN-LAST:event_RemoveMouseExited
+
+    private void SelectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SelectMouseClicked
+        // TODO add your handling code here:
+        if(!Select.isEnabled()){
+            return;
+        }else{
+            JFileChooser fileChooser = new JFileChooser();
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                try {
+                    selectedFile = fileChooser.getSelectedFile();
+                    destination = "src/userimages/" + selectedFile.getName();
+                    path  = selectedFile.getAbsolutePath();
+
+                    if(FileExistenceChecker(path) == 1){
+                        JOptionPane.showMessageDialog(null, "File Already Exist, Rename or Choose another!");
+                        destination = "";
+                        path="";
+                    }else{
+                        image.setIcon(ResizeImage(path, null, image));
+                        Select.setEnabled(false);
+                        Remove.setEnabled(false);
+                    }
+                } catch (Exception ex) {
+                    System.out.println("File Error!");
+                }
+            }
+        }
+    }//GEN-LAST:event_SelectMouseClicked
+
+    private void SelectMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SelectMouseEntered
+        // TODO add your handling code here:
+        Select.setForeground(Color.white);
+        Select.setBackground(Color.gray);
+    }//GEN-LAST:event_SelectMouseEntered
+
+    private void SelectMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SelectMouseExited
+        // TODO add your handling code here:
+        Select.setForeground(Color.black);
+        Select.setBackground(null);
+    }//GEN-LAST:event_SelectMouseExited
 
     /**
      * @param args the command line arguments
@@ -703,17 +1038,23 @@ public class crud_form extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JLabel Remove;
+    public javax.swing.JLabel Select;
     private javax.swing.JLabel back;
     private javax.swing.JLabel clear;
     public javax.swing.JTextField contact;
     public javax.swing.JPasswordField cpassword;
     public javax.swing.JTextField email;
     public javax.swing.JLabel enter;
+    public javax.swing.JTextField fanimal;
+    public javax.swing.JTextField fcolor;
     public javax.swing.JTextField fname;
     public javax.swing.JComboBox<String> gender;
+    public javax.swing.JLabel image;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel1;
+    public javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     public javax.swing.JTextField lname;
     public javax.swing.JPasswordField password;

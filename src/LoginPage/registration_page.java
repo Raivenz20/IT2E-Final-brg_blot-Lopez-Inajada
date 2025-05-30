@@ -5,12 +5,15 @@
  */
 package LoginPage;
 
+import Config.Session;
 import Config.config;
 import Config.passwordHasher;
+import static LoginPage.login_page.status;
 import java.awt.Color;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -26,7 +29,7 @@ public class registration_page extends javax.swing.JFrame {
     public registration_page() {
         initComponents();
     }
-
+    
     public static String em, us;
     
     public boolean duplicateChecker(){
@@ -93,6 +96,8 @@ public class registration_page extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        fcolor = new javax.swing.JTextField();
+        fanimal = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -174,7 +179,7 @@ public class registration_page extends javax.swing.JFrame {
                 fnameActionPerformed(evt);
             }
         });
-        jPanel1.add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 360, 40));
+        jPanel1.add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 180, 40));
 
         lname.setBackground(new java.awt.Color(204, 255, 255));
         lname.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -193,7 +198,7 @@ public class registration_page extends javax.swing.JFrame {
                 lnameActionPerformed(evt);
             }
         });
-        jPanel1.add(lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 360, 40));
+        jPanel1.add(lname, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 100, 180, 40));
 
         email.setBackground(new java.awt.Color(204, 255, 255));
         email.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -212,7 +217,7 @@ public class registration_page extends javax.swing.JFrame {
                 emailActionPerformed(evt);
             }
         });
-        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 360, 40));
+        jPanel1.add(email, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 220, 360, 40));
 
         gender.setBackground(new java.awt.Color(204, 255, 255));
         gender.setEditable(true);
@@ -225,7 +230,7 @@ public class registration_page extends javax.swing.JFrame {
                 genderActionPerformed(evt);
             }
         });
-        jPanel1.add(gender, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 160, 70));
+        jPanel1.add(gender, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 160, 70));
 
         usertype.setBackground(new java.awt.Color(204, 255, 255));
         usertype.setEditable(true);
@@ -238,12 +243,12 @@ public class registration_page extends javax.swing.JFrame {
                 usertypeActionPerformed(evt);
             }
         });
-        jPanel1.add(usertype, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 190, 170, 70));
+        jPanel1.add(usertype, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 150, 170, 70));
 
         contact.setBackground(new java.awt.Color(204, 255, 255));
         contact.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
         contact.setToolTipText("");
-        contact.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Contact Number", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 0, 14))); // NOI18N
+        contact.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Contact Number +63\n", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 0, 14))); // NOI18N
         contact.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 contactMouseEntered(evt);
@@ -257,7 +262,7 @@ public class registration_page extends javax.swing.JFrame {
                 contactActionPerformed(evt);
             }
         });
-        jPanel1.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, 360, 40));
+        jPanel1.add(contact, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 360, 40));
 
         cpassword.setBackground(new java.awt.Color(204, 255, 255));
         cpassword.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
@@ -358,6 +363,44 @@ public class registration_page extends javax.swing.JFrame {
         jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 0, 30, 30));
 
         jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 30));
+
+        fcolor.setBackground(new java.awt.Color(204, 255, 255));
+        fcolor.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        fcolor.setToolTipText("");
+        fcolor.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Favorite Color", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 0, 14))); // NOI18N
+        fcolor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fcolorMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fcolorMouseExited(evt);
+            }
+        });
+        fcolor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fcolorActionPerformed(evt);
+            }
+        });
+        jPanel1.add(fcolor, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 300, 180, 40));
+
+        fanimal.setBackground(new java.awt.Color(204, 255, 255));
+        fanimal.setFont(new java.awt.Font("Verdana", 0, 12)); // NOI18N
+        fanimal.setToolTipText("");
+        fanimal.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true), "Favorite Animal", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 0, 14))); // NOI18N
+        fanimal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                fanimalMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                fanimalMouseExited(evt);
+            }
+        });
+        fanimal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fanimalActionPerformed(evt);
+            }
+        });
+        jPanel1.add(fanimal, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, 180, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -469,6 +512,8 @@ public class registration_page extends javax.swing.JFrame {
             username.setText(null);
             password.setText(null);
             cpassword.setText(null);
+            fcolor.setText(null);
+            fanimal.setText(null);
             JOptionPane.showMessageDialog(null, "Cleared Successfully!");
         }
     }//GEN-LAST:event_clearMouseClicked
@@ -502,6 +547,8 @@ public class registration_page extends javax.swing.JFrame {
                 || lname.getText().isEmpty()
                 || email.getText().isEmpty()
                 || username.getText().isEmpty()
+                || fanimal.getText().isEmpty()
+                || fcolor.getText().isEmpty()
                 || password.getText().isEmpty()
                 || contact.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "All Fields are Required!");
@@ -519,10 +566,10 @@ public class registration_page extends javax.swing.JFrame {
             config conf = new config();
             try{
                 String pass = passwordHasher.hashPassword(password.getText());
-                if(conf.insertData("INSERT INTO accounts (fname, lname, gender, user_type, email, uname, pname, contact, status) "
+                if(conf.insertData("INSERT INTO accounts (fname, lname, gender, user_type, email, uname, pname, contact, fanimal, fcolor, status, image) "
                         + "VALUES ('"+fname.getText()+"', '"+lname.getText()+"', '"+gender.getSelectedItem()+"'"
                                 + ", '"+usertype.getSelectedItem()+"', '"+email.getText()+"', '"+username.getText()+"'"
-                                        + ", '"+pass+"', '"+contact.getText()+"', 'Pending')")==1) {
+                                        + ", '"+pass+"', '"+contact.getText()+"','"+fanimal.getText()+"','"+fcolor.getText()+"', 'Pending', 'null')")==1) {
                     JOptionPane.showMessageDialog(null, "Registered Successfully!");
                     login_page login = new login_page();
                     login.setVisible(true);
@@ -562,6 +609,30 @@ public class registration_page extends javax.swing.JFrame {
         back.setForeground(Color.black);
         back.setBackground(null);
     }//GEN-LAST:event_backMouseExited
+
+    private void fcolorMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fcolorMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fcolorMouseEntered
+
+    private void fcolorMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fcolorMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fcolorMouseExited
+
+    private void fcolorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fcolorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fcolorActionPerformed
+
+    private void fanimalMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fanimalMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fanimalMouseEntered
+
+    private void fanimalMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fanimalMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fanimalMouseExited
+
+    private void fanimalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fanimalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fanimalActionPerformed
 
     /**
      * @param args the command line arguments
@@ -604,6 +675,8 @@ public class registration_page extends javax.swing.JFrame {
     private javax.swing.JTextField contact;
     private javax.swing.JPasswordField cpassword;
     private javax.swing.JTextField email;
+    private javax.swing.JTextField fanimal;
+    private javax.swing.JTextField fcolor;
     private javax.swing.JTextField fname;
     private javax.swing.JComboBox<String> gender;
     private javax.swing.JLabel jLabel1;
